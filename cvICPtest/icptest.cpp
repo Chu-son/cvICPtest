@@ -183,6 +183,7 @@ void findBestTransform(Mat& X, Mat& X_bar) {
 	Xnew.convertTo(X, CV_32SC1);
 }
 
+// 近傍点探索
 float flann_knn(Mat& m_destinations, Mat& m_object, vector<int>& ptpairs, vector<float>& dists = vector<float>()) {
 	// find nearest neighbors using FLANN
 	cv::Mat m_indices(m_object.rows, 1, CV_32S);
@@ -218,8 +219,10 @@ void ICP(Mat& X, Mat& destination) {
 
 	while (true) {
 		pair.clear(); dists.clear();
+		// 近傍点探索して合計距離を取得
 		double dist = flann_knn(destination, X, pair, dists);
 
+		// 前回よりも増加していたら終了
 		if (lastDist <= dist) {
 			X = lastGood;
 			break;	//converged?
@@ -346,6 +349,8 @@ int main(int argc, char** argv) {
 	//findBestTransform(X_1ch,X_bar_1ch);
 
 	*/
+
+	// 画像を読み込んで点を抽出
 	Mat destinations_img = imread("0_0_2_2.jpg", 0);
 	Mat X_img = imread("0_0_2_3.jpg", 0);
 
